@@ -4,9 +4,40 @@ spring:
   config:
     import:
       optional:configserver:http://localhost:8888
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
+      routes:
+        - id: licensing-service
+          uri: lb://licensing-service
+          predicates:
+            - Path=/license/**
+          filters:
+            - RewritePath=/license/(?<path>.*), /$\{path}
+
+        - id: organization-service
+          uri: lb://organization-service
+          predicates:
+            - Path=/organization/**
+          filters:
+            - RewritePath=/organization/(?<path>.*), /$\{path}
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: default
+  spring:
+    cloud:
+      gateway:
+        discovery:
+          locator:
+            enabled: true
+            lower-case-service-id: true
