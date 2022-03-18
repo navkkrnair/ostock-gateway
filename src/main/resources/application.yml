@@ -41,3 +41,20 @@ spring:
           locator:
             enabled: true
             lower-case-service-id: true
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  spring:
+    cloud:
+      gateway:
+        discovery:
+          locator:
+            enabled: false
+            lower-case-service-id: true
+logging:
+  level:
+    com.cts.gateway: debug
