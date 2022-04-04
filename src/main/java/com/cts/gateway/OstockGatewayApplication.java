@@ -17,7 +17,9 @@ public class OstockGatewayApplication {
     public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes()
                       .route(ps -> ps.path("/license/**")
-                                     .filters(fs -> fs.rewritePath("/license/(?<path>.*)", "/${path}"))
+                                     .filters(fs -> fs.rewritePath("/license/(?<path>.*)", "/${path}")
+                                                      .removeRequestHeader("Cookie")
+                                                      .removeRequestHeader("Set-Cookie"))
                                      .uri("lb://licensing-service"))
                       .build();
     }
